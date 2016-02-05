@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Label</key>
+	<string>himawari-desktop</string>
+	<key>ProgramArguments</key>
+	<array>
+		<string>/usr/local/bin/python</string>
+		<string>/Users/will/code/live-earth-desktop/himawari.py</string>
+		<string>/Users/will/code/live-earth-desktop/desktop.png</string>
+	</array>
+	<key>RunAtLoad</key>
+	<true/>
+	<key>StartInterval</key>
+	<integer>600</integer>
+	<key>StandardOutPath</key>
+    <string>/Users/will/code/live-earth-desktop/out.log</string>
+    <key>StandardErrorPath</key>
+    <string>/Users/will/code/live-earth-desktop/err.log</string>
+</dict>
+</plist>

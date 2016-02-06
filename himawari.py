@@ -15,22 +15,25 @@ import uuid
 # Valid zoom levels seem to be powers of 2, 1..16, and 20.
 #
 # To do:
-# - Better errors (e.g., catch the "No Image" image).
 # - Librarify.
+# - Clean up this paths business
+# - Install script
 
 
 # Tile size for this dataset:
 width = 550
 height = 550
 
-
-# time = parse(sys.argv[1])
 tz = pytz.timezone('UTC')
+
+# they don't get uploaded immediately. 40 minutes is a conservative delay.
 time = datetime.now(tz) - timedelta(minutes=40)
 print("Fetching image for time: " + datetime.strftime(time, "%Y-%m-%d %H:%M:%S"))
 scale = 8
-# out = sys.argv[1]
 
+# set these appropriately for yourself
+# using a UUID just so the OS sees a new filename each time it goes to change
+#   the desktop image. if it's always the same name, it won't change
 tmp = '/Users/will/code/live-earth-desktop/tmp.png'
 out = '/Users/will/code/live-earth-desktop/images/desktop-%s.png' % (str(uuid.uuid4()))
 
@@ -64,16 +67,21 @@ def fetch_and_set():
             png.paste(tile, (width*x, height*y, width*(x+1), height*(y+1)))
 
     png.save(tmp, 'PNG')
+
+    # clear out the old images in this folder so the OS picks the right one
     os.system("rm /Users/will/code/live-earth-desktop/images/*")
+
+    # now move in the new image. doing it like this because writing the image
+    # takes a while, so it's better to make it a (semi-) atomic swap
     os.system("mv %s %s" % (tmp, out))
 
-    # os.system("osascript -e 'tell application \"Finder\" to set desktop picture to POSIX file \"" + out + "\"'")
-    # os.system("killall Dock")
 
 try:
     fetch_and_set()
 except requests.exceptions.ConnectionError:
     logging.exception('')
+
+    # a very dirty try-at-most-twice
     try:
         fetch_and_set()
     except requests.exceptions.ConnectionError:

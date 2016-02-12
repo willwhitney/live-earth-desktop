@@ -9,8 +9,9 @@ Inspired by [someone awesome on Reddit](https://www.reddit.com/r/programming/com
 ## Instructions
 
 1. Clone this repo
-2. Change the paths set in `tmp` and `out` and `os.system("rm ...")` in `himawari.py` and those in `himawari.plist` to paths inside this directory.
-3. `ln -s <this-dir>/himawari.plist /Users/<you>/Library/LaunchAgents/`
-4. `launchctl load -w /Users/<you>/Library/LaunchAgents/himawari.plist` to start it running every 10 minutes
-5. Go to OS X Preferences > Desktop and Screen Saver and set your desktop to rotate through the images contained in the `images` directory that you're writing these images to (whatever directory you made `out` point to).
-6. Enjoy!
+2. If you don't have PIL or Pillow installed, `pip install Pillow`
+3. Change the paths set in `tmp` and `out` and `os.system("rm ...")` in `himawari.py` and those in `himawari.plist` to paths inside this directory.
+4. `ln -s <this-dir>/himawari.plist /Users/<you>/Library/LaunchAgents/`
+5. `launchctl load -w /Users/<you>/Library/LaunchAgents/himawari.plist` to start it running every 10 minutes
+6. Go to OS X Preferences > Desktop and Screen Saver and set your desktop to rotate through the images contained in the `images` directory that you're writing these images to (whatever directory you made `out` point to).
+7. Enjoy!

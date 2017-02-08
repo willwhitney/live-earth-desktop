@@ -10,6 +10,7 @@ Inspired by [someone awesome on Reddit](https://www.reddit.com/r/programming/com
 
 1. Clone this repo
 2. If you don't have PIL or Pillow installed, `pip install Pillow`
+3. If you don't have the requests module installed, `pip install requests`
 3. Change the paths set in `tmp` and `out` and `os.system("rm ...")` in `himawari.py` and those in `himawari.plist` to paths inside this directory.
 4. Try the Python script by running `python himawari.py` just to make sure everything's kosher. It should download an image.
 5. `ln -s <this-dir>/himawari.plist /Users/<you>/Library/LaunchAgents/`

@@ -3,11 +3,14 @@ import sys
 from datetime import datetime, timedelta
 import pytz
 from PIL import Image
-from StringIO import StringIO
 import os
 import logging
 import uuid
 
+try:
+    from StringIO import StringIO
+except ImportError:
+    from io import BytesIO
 # python himawari.py
 # stolen from https://gist.github.com/celoyd/39c53f824daef7d363db
 
@@ -34,8 +37,11 @@ scale = 8
 # set these appropriately for yourself
 # using a UUID just so the OS sees a new filename each time it goes to change
 #   the desktop image. if it's always the same name, it won't change
-tmp = '/Users/will/code/live-earth-desktop/tmp.png'
-out = '/Users/will/code/live-earth-desktop/images/desktop-%s.png' % (str(uuid.uuid4()))
+
+base = '/Users/willw/code/live-earth-desktop/'
+tmp = base + 'tile_tmp.png'
+tile_tmp = base + 'tmp.png'
+out = base + 'images/desktop-%s.png' % (str(uuid.uuid4()))
 
 
 base = 'http://himawari8.nict.go.jp/img/D531106/%sd/550' % (scale)
@@ -50,12 +56,24 @@ def pathfor(t, x, y):
 sess = requests.Session() # so requests will reuse the connection
 png = Image.new('RGB', (width*scale, height*scale))
 
+def download_file(url, path):
+    # print("Downloading image from {}".format(url))
+    r = requests.get(url, stream=True)
+    with open(path, 'wb') as f:
+        for chunk in r.iter_content(chunk_size=1024):
+            if chunk: # filter out keep-alive new chunks
+                f.write(chunk)
+                # f.flush() # commented by recommendation from J.F.Sebastian
+    return path
+
 def fetch_and_set():
     previous_tiledata = ""
     for x in range(scale):
         for y in range(scale):
             path = pathfor(time, x, y)
-            tiledata = sess.get(path).content
+            response = sess.get(path, stream=True)
+            response.raw.decode_content=True
+            tiledata = response.raw
 
             # we're just getting the "No Image" image
             # no need to retry, there just isn't data for right now
@@ -63,7 +81,7 @@ def fetch_and_set():
                 print("No image available, quitting.")
                 sys.exit(0)
 
-            tile = Image.open(StringIO(tiledata))
+            tile = Image.open(tiledata)
             png.paste(tile, (width*x, height*y, width*(x+1), height*(y+1)))
 
     png.save(tmp, 'PNG')

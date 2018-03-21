@@ -78,11 +78,11 @@ def fetch_and_set():
 
 try:
     fetch_and_set()
-except requests.exceptions.ConnectionError:
+except:
     logging.exception('')
 
     # a very dirty try-at-most-twice
     try:
         fetch_and_set()
-    except requests.exceptions.ConnectionError:
+    except:
         logging.exception('')

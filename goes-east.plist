@@ -3,11 +3,11 @@
 <plist version="1.0">
 <dict>
 	<key>Label</key>
-	<string>himawari-desktop</string>
+	<string>goes-east-desktop</string>
 	<key>ProgramArguments</key>
 	<array>
 		<string>/usr/local/bin/python</string>
-		<string>/Users/will/code/live-earth-desktop/himawari.py</string>
+		<string>/Users/will/code/live-earth-desktop/goes-east.py</string>
 		<string>/Users/will/code/live-earth-desktop/desktop.png</string>
 	</array>
 	<key>RunAtLoad</key>

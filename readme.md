@@ -11,9 +11,12 @@ Inspired by [someone awesome on Reddit](https://www.reddit.com/r/programming/com
 ## Instructions
 
 1. Clone this repo
+2. If you don't have PIL or Pillow installed, `pip install Pillow`
+3. If you don't have the requests module installed, `pip install requests`
 1. Pick whether you want images of Australia and Southeast Asia (Himawari) or the Americas (GOES-East).
-2. Change the paths set in `tmp` and `out` and `os.system("rm ...")` in `himawari.py` or `goes-east.py` to paths inside this directory.
-3. `ln -s <this-dir>/himawari.plist /Users/<you>/Library/LaunchAgents/` or `ln -s <this-dir>/goes-east.plist /Users/<you>/Library/LaunchAgents/`
-4. `launchctl /Users/<you>/Library/LaunchAgents/himawari.plist` or `launchctl /Users/<you>/Library/LaunchAgents/goes-east.plist` to start it running every 10 minutes
-5. Go to OS X Preferences > Desktop and Screen Saver and set your desktop to rotate through the images contained in the `images` directory that you're writing these images to (whatever directory you made `out` point to).
-6. Enjoy!
+3. Change the paths set in `tmp` and `out` and `os.system("rm ...")` in `himawari.py` or `goes-east.py` and those in `himawari.plist` or `goes-east.plist` to paths inside this directory.
+4. Try the Python script by running `python himawari.py` or `python goes-east.py` just to make sure everything's kosher. It should download an image.
+5. `ln -s <this-dir>/himawari.plist /Users/<you>/Library/LaunchAgents/` or `ln -s <this-dir>/goes-east.plist /Users/<you>/Library/LaunchAgents/`
+6. `launchctl load -w /Users/<you>/Library/LaunchAgents/himawari.plist` or `launchctl /Users/<you>/Library/LaunchAgents/goes-east.plist` to start it running every 10 minutes
+7. Go to OS X Preferences > Desktop and Screen Saver and set your desktop to rotate through the images contained in the `images` directory that you're writing these images to (whatever directory you made `out` point to).
+8. Enjoy!

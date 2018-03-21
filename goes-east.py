@@ -43,6 +43,7 @@ def get_image_link():
 # "how-to-download-large-file-in-python-with-requests-py"
 
 def download_file(url, path):
+    print("Downloading image from {}".format(url))
     r = requests.get(url, stream=True)
     with open(path, 'wb') as f:
         for chunk in r.iter_content(chunk_size=1024):

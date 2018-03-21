@@ -6,7 +6,8 @@ Similarly, there's another satellite called GOES-East. It's above South America 
 
 Inspired by [someone awesome on Reddit](https://www.reddit.com/r/programming/comments/441do9/i_made_a_windows_powershell_script_that_puts_a/), and based on a script by [celoyd](https://github.com/celoyd), I built a script that downloads the latest photo. With a `plist` file for `launchd` on OS X, I can run this script every ten minutes and always have the latest image on my machine. And then by setting my OS X desktop to a slideshow of the images inside a folder, the latest Himawari-8 or GOES-East photo is always set as my desktop image.
 
-![](example.png)
+![](himawari-example.png)
+![](goes-example.png)
 
 ## Instructions
 

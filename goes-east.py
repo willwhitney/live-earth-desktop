@@ -30,13 +30,14 @@ def get_image_link():
     links = html.select('a.FB,a.FBNZ')
     image_link = None
 
-    # the image links appear on the page in order of increasing resolution,
-    # so we can just take the last one
     for l in links:
         link_target = l.get_attribute_list('href')[0]
         # the GEOCOLOR image is what we want
         if 'GEOCOLOR' in link_target:
-            image_link = link_target
+            print(link_target)
+            if (link_target.endswith('10848x10848.jpg') or
+                link_target.endswith('5424x5424.jpg')):
+                image_link = link_target
     return image_link
 
 # taken from "https://stackoverflow.com/questions/16694907/"
@@ -57,14 +58,16 @@ out = '/Users/willw/code/live-earth-desktop/images/desktop-{}.jpg'.format(
     str(uuid.uuid4()))
 
 def fetch_and_set():
-    download_file(get_image_link(), tmp)
+    link = get_image_link()
+    if link is not None:
+        download_file(link, tmp)
 
-    # clear out the old images in this folder so the OS picks the right one
-    os.system("rm /Users/willw/code/live-earth-desktop/images/*")
+        # clear out the old images in this folder so the OS picks the right one
+        os.system("rm /Users/willw/code/live-earth-desktop/images/*")
 
-    # now move in the new image. doing it like this because writing the image
-    # takes a while, so it's better to make it a (semi-) atomic swap
-    os.system("mv {} {}".format(tmp, out))
+        # now move in the new image. doing it like this because writing the image
+        # takes a while, so it's better to make it a (semi-) atomic swap
+        os.system("mv {} {}".format(tmp, out))
 
 try:
     fetch_and_set()

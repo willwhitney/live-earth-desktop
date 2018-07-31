@@ -11,6 +11,9 @@ from bs4 import BeautifulSoup
 import time
 import tzlocal
 import os.path
+import cv2
+
+from PIL import Image, ImageOps
 
 # python himawari.py
 # stolen from https://gist.github.com/celoyd/39c53f824daef7d363db
@@ -87,6 +90,11 @@ def fetch_and_set():
 
     if not exists(img_name):
         download_file(link, tmp)
+        img = cv2.imread(tmp)
+        height = img.shape[0]
+        img = cv2.copyMakeBorder(
+                img, int(0.03 * height), 0, 0, 0, cv2.BORDER_CONSTANT)
+        cv2.imwrite(tmp, img)
 
         # clear out the old images in this folder so the OS picks the right one
         # os.system("mv {} {}".format(out_dir + '*', archive_dir))

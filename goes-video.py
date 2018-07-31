@@ -11,7 +11,9 @@ from bs4 import BeautifulSoup
 import time
 import tzlocal
 import os.path
+import traceback
 
+from datetime import datetime, timedelta
 # python himawari.py
 # stolen from https://gist.github.com/celoyd/39c53f824daef7d363db
 
@@ -19,6 +21,15 @@ import os.path
 # - Librarify.
 # - Clean up this paths business
 # - Install script
+
+def link_from_time(t):
+    year = t.year
+    day_of_year = t.timetuple().tm_yday
+    utc_24h = t.hour * 100 + (t.minute // 15) * 15
+    link = ("https://cdn.star.nesdis.noaa.gov/GOES16/ABI/FD/GEOCOLOR/"
+            "{:04d}{:03d}{:04d}_GOES16-ABI-FD-GEOCOLOR-5424x5424.jpg").format(
+            year, day_of_year, utc_24h)
+    return link
 
 
 def get_image_link():
@@ -47,13 +58,15 @@ def filename_from_url(link):
 # "how-to-download-large-file-in-python-with-requests-py"
 
 def download_file(url, path):
-    # print("Downloading image from {}".format(url))
     r = requests.get(url, stream=True)
+    size = 0
     with open(path, 'wb') as f:
         for chunk in r.iter_content(chunk_size=1024):
             if chunk: # filter out keep-alive new chunks
+                size += len(chunk)
                 f.write(chunk)
-                # f.flush() # commented by recommendation from J.F.Sebastian
+    if size < 10000000:
+        os.system("rm {}".format(path))
     return path
 
 def print_image_time(link):
@@ -96,18 +109,20 @@ def fetch_and_set():
         # takes a while, so it's better to make it a (semi-) atomic swap
         os.system("mv {} {}".format(tmp, out_dir + img_name))
 
-    print_image_time(link)
-
-
-try:
-    fetch_and_set()
-except:
-    pass
-    # logging.exception('')
-
-    # a very dirty try-at-most-twice
+t = datetime.utcnow()
+for i in range(1000):
+    link = link_from_time(t)
+    print(link)
     try:
-        fetch_and_set()
+        download_file(link, 'video_images/{}.jpg'.format(1000 - i))
+    except KeyboardInterrupt:
+        raise
     except:
-        pass
-        # logging.exception('')
+        traceback.print_exc()
+        print("Skipping time {:%Y-%m-%d %H:%M}".format(t))
+    t -= timedelta(minutes=15)
+
+# os.system("cd video_images")
+# os.system("for f in (ls); echo \"file '$f'\" >> files.txt; end")
+# os.system("ffmpeg  -f concat -i files.txt -vf scale=2000:-1 -r 10 output.mp4")
+# os.system("cd ..")

@@ -12,9 +12,10 @@ import time
 import tzlocal
 import os.path
 import cv2
+from skimage import io
 
 from PIL import Image, ImageOps
-
+Image.MAX_IMAGE_PIXELS = None
 # python himawari.py
 # stolen from https://gist.github.com/celoyd/39c53f824daef7d363db
 
@@ -82,6 +83,12 @@ def exists(img_name):
             return True
     return False
 
+def is_valid_image(path):
+    try:
+        img = io.imread(path)
+    except:
+        return False
+    return True
 
 def fetch_and_set():
     link = get_image_link()
@@ -91,6 +98,8 @@ def fetch_and_set():
     if not exists(img_name):
         download_file(link, tmp)
         img = cv2.imread(tmp)
+        assert is_valid_image(tmp)
+
         height = img.shape[0]
         img = cv2.copyMakeBorder(
                 img, int(0.03 * height), 0, 0, 0, cv2.BORDER_CONSTANT)
@@ -106,16 +115,16 @@ def fetch_and_set():
 
     print_image_time(link)
 
-
-try:
-    fetch_and_set()
-except:
-    pass
-    # logging.exception('')
-
-    # a very dirty try-at-most-twice
-    try:
-        fetch_and_set()
-    except:
-        pass
-        # logging.exception('')
+fetch_and_set()
+# try:
+#     fetch_and_set()
+# except:
+#     # pass
+#     logging.exception('')
+#
+#     # a very dirty try-at-most-twice
+#     try:
+#         fetch_and_set()
+#     except:
+#         # pass
+#         logging.exception('')
